@@ -42,8 +42,13 @@ def arm_and_takeoff(aTargetAltitude):
 arm_and_takeoff(3)
 print "wait for 10sec..."
 time.sleep(10)
-print "Landing..."
+print "Landing",
 vehicle.mode = VehicleMode("LAND")
+while vehicle.armed:
+    print ".",
+    time.sleep(1)
+print ""
+
 print "Landed. Close connection..."
 vehicle.close()
 print "completed."
