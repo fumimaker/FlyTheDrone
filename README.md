@@ -1,0 +1,2 @@
+# FlyTheDrone
+放棄されてしまったDroneKitを使ってArdupilotを制御してみるリポジトリ．
