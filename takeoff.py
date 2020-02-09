@@ -4,6 +4,16 @@ import time
 connection_string = '/dev/ttyS0'
 vehicle = connect(connection_string, wait_ready=True)
 
+def printStatus():
+    print("--------------------------" )
+    print(" System status: %s" % vehicle.system_status.state)
+    print(" Is Armable?: %s" % vehicle.is_armable)
+    print(" Armed: %s" % vehicle.armed) 
+    print(" Mode: %s" % vehicle.mode.name )
+    print(" GlobalLocation: %s" % vehicle.location.global_frame)
+    print(" Altitude: %s" % vehicle.location.global_relative_frame.alt)
+
+
 def arm_and_takeoff(aTargetAltitude):
     """
     Arms vehicle and fly to aTargetAltitude.
@@ -13,6 +23,7 @@ def arm_and_takeoff(aTargetAltitude):
     # Don't try to arm until autopilot is ready
     while not vehicle.is_armable:
         print " Waiting for vehicle to initialise..."
+        printStatus()
         time.sleep(1)
 
     print "Arming motors"
@@ -23,6 +34,7 @@ def arm_and_takeoff(aTargetAltitude):
     # Confirm vehicle armed before attempting to take off
     while not vehicle.armed:
         print " Waiting for arming..."
+        printStatus()
         time.sleep(1)
 
     print "Taking off!"
@@ -38,16 +50,17 @@ def arm_and_takeoff(aTargetAltitude):
             break
         time.sleep(1)
 
-
+printStatus()
 arm_and_takeoff(3)
 print "wait for 10sec..."
-time.sleep(10)
-print "Landing",
+for i in range(10):
+    printStatus()
+    time.sleep(1)
+print "Landing"
 vehicle.mode = VehicleMode("LAND")
 while vehicle.armed:
-    print ".",
+    print " Altitude: ", vehicle.location.global_relative_frame.alt
     time.sleep(1)
-print ""
 
 print "Landed. Close connection..."
 vehicle.close()
