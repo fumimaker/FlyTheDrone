@@ -1,7 +1,7 @@
 # FlyTheDrone
 放棄されてしまったDroneKitを使ってArdupilotを制御してみるリポジトリ．
 
-# Requrement
+# Requirement
 - Python2系
     - 動作はPython2.7.3で確認してます．
 - Raspi3B
