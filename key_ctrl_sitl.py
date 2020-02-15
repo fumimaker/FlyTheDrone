@@ -70,7 +70,7 @@ p = Popen(sitl_boot_list)   # サブプロセスの起動
 time.sleep(1)   # 起動完了のために1秒待つ
 
 #connection_stringの生成
-connection_string = 'tcp:localhost:' + str(5760 + int(sitl_instance_num) * 10 ) # インスタンスが増えるとポート番号が10増える
+connection_string = 'tcp:127.0.0.1:5760'  # インスタンスが増えるとポート番号が10増える
 
 # フライトコントローラ(FC)へ接続
 print( "FCへ接続: %s" % (connection_string) )    # 接続設定文字列を表示

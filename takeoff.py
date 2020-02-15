@@ -1,8 +1,32 @@
 from dronekit import connect, VehicleMode
 import time
 
-connection_string = '/dev/ttyS0'
+#Set up option parsing to get connection string
+import argparse
+parser = argparse.ArgumentParser(
+    description='Print out vehicle state information. Connects to SITL on local PC by default.')
+parser.add_argument('--connect',
+                    help="vehicle connection target string. If not specified, SITL automatically started and used.")
+args = parser.parse_args()
+
+connection_string = args.connect
+sitl = None
+
+# connection_string = '/dev/ttyS0'
+
+#Start SITL if no connection string specified
+if not connection_string:
+    import dronekit_sitl
+    sitl = dronekit_sitl.start_default()
+    connection_string = sitl.connection_string()
+
+
+# Connect to the Vehicle.
+#   Set `wait_ready=True` to ensure default attributes are populated before `connect()` returns.
+print("\nConnecting to vehicle on: %s" % connection_string)
 vehicle = connect(connection_string, wait_ready=True)
+
+vehicle.wait_ready('autopilot_version')
 
 def printStatus():
     print("--------------------------" )
@@ -26,11 +50,14 @@ def arm_and_takeoff(aTargetAltitude):
         printStatus()
         time.sleep(1)
 
-    print "Arming motors"
+    print "Change to GUIDED mode"
     # Copter should arm in GUIDED mode
     vehicle.mode    = VehicleMode("GUIDED")
+    while not vehicle.mode.name == 'GUIDED':  # Wait until mode has changed
+        print(" Waiting for mode change ...")
+        time.sleep(1)
+    print "Arming motors"
     vehicle.armed   = True
-
     # Confirm vehicle armed before attempting to take off
     while not vehicle.armed:
         print " Waiting for arming..."
@@ -49,6 +76,7 @@ def arm_and_takeoff(aTargetAltitude):
             print "Reached target altitude"
             break
         time.sleep(1)
+
 
 printStatus()
 arm_and_takeoff(3)
