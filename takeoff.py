@@ -12,7 +12,6 @@ args = parser.parse_args()
 connection_string = args.connect
 sitl = None
 
-# connection_string = '/dev/ttyS0'
 
 #Start SITL if no connection string specified
 if not connection_string:
@@ -20,6 +19,7 @@ if not connection_string:
     sitl = dronekit_sitl.start_default()
     connection_string = sitl.connection_string()
 
+# connection_string = '/dev/ttyS0'
 
 # Connect to the Vehicle.
 #   Set `wait_ready=True` to ensure default attributes are populated before `connect()` returns.

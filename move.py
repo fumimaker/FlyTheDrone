@@ -27,7 +27,6 @@ connection_string = args.connect
 sitl = None
 
 
-
 def arm_and_takeoff(aTargetAltitude):
     """
     Arms vehicle and fly to aTargetAltitude.
@@ -144,6 +143,7 @@ condition_yaw(45, relative=True)
 
 print("Yaw +180 relative")
 condition_yaw(180, relative=True)
+
 
 
 """
