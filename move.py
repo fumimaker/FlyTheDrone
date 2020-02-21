@@ -1,13 +1,5 @@
 # -*- coding: utf-8 -*-
 
-"""
-© Copyright 2015-2016, 3D Robotics.
-guided_set_speed_yaw.py: (Copter Only)
-
-This example shows how to move/direct Copter and send commands in GUIDED mode using DroneKit Python.
-
-Example documentation: http://python.dronekit.io/examples/guided-set-speed-yaw-demo.html
-"""
 from __future__ import print_function
 
 from dronekit import connect, VehicleMode, LocationGlobal, LocationGlobalRelative
@@ -24,7 +16,7 @@ parser.add_argument('--connect',
                     help="Vehicle connection target string. If not specified, SITL automatically started and used.")
 args = parser.parse_args()
 connection_string = args.connect
-sitl = None
+sitl = "127.0.0.1:14549"
 
 
 def arm_and_takeoff(aTargetAltitude):
