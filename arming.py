@@ -91,12 +91,16 @@ def arming():
         vehicle.armed = False
         print "disarming..."
         time.sleep(1)
+    
+
 
 
 vehicle.wait_ready('autopilot_version')
 printStatus()
+arming()
 
-arm_and_takeoff(3)
+'''
+arm_and_takeoff(10)
 print "wait for 10sec..."
 for i in range(10):
     printStatus()
@@ -114,6 +118,8 @@ while vehicle.armed:
 
 print "Landed. Close connection..."
 
+
+'''
 
 vehicle.close()
 print "completed."
