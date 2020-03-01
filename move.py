@@ -45,7 +45,7 @@ def arm_and_takeoff(aTargetAltitude):
 
 
 
-def condition_yaw(heading, relative=True):
+def condition_yaw(heading, relative=False):
     if relative:
         is_relative = 1  # yaw relative to direction of travel
     else:
@@ -68,7 +68,7 @@ def send_ned_velocity(velocity_x, velocity_y, velocity_z, duration):
     msg = vehicle.message_factory.set_position_target_local_ned_encode(
         0,       # time_boot_ms (not used)
         0, 0,    # target system, target component
-        mavutil.mavlink.MAV_FRAME_LOCAL_NED,  # frame
+        mavutil.mavlink.MAV_FRAME_BODY_OFFSET_NED,  # frame
         0b0000111111000111,  # type_mask (only speeds enabled)
         0, 0, 0,  # x, y, z positions (not used)
         velocity_x, velocity_y, velocity_z,  # x, y, z velocity in m/s
@@ -101,9 +101,9 @@ def send_global_velocity(velocity_x, velocity_y, velocity_z, duration):
         0, 0)    # yaw, yaw_rate (not supported yet, ignored in GCS_Mavlink)
 
     # send command to vehicle on 1 Hz cycle
-    for x in range(0, duration):
+    for x in range(0, duration*10):
         vehicle.send_mavlink(msg)
-        time.sleep(1)
+        time.sleep(0.1)
 
 
 def headingRelative(headRel):
@@ -127,7 +127,9 @@ print('Connecting to vehicle on: %s' % connection_string)
 vehicle = connect(connection_string, wait_ready=True)
 
 #Arm and take of to altitude of 5 meters
-arm_and_takeoff(3)
+arm_and_takeoff(10)
+
+'''
 DURATION = 20  # Set duration for each segment.
 #Set up velocity vector to map to each direction.
 # vx > 0 => fly North
@@ -180,9 +182,30 @@ send_ned_velocity(0, 0, 0, 1)
 """
 The example is completing. LAND at current location.
 """
+'''
+condition_yaw(0, relative=False)
+send_ned_velocity(0, 0, 0, 3)
 
-print("Setting LAND mode...")
-vehicle.mode = VehicleMode("LAND")
+send_ned_velocity(1, 0, 0, 3)
+send_ned_velocity(0, 0, 0, 3)
+send_ned_velocity(-1, 0, 0, 3)
+send_ned_velocity(0, 0, 0, 3)
+send_ned_velocity(0, 1, 0, 3)
+send_ned_velocity(0, 0, 0, 3)
+send_ned_velocity(0, -1, 0, 3)
+send_ned_velocity(0, 0, 0, 3)
+
+send_ned_velocity(0, 0, -1, 3)
+send_ned_velocity(0, 0, 0, 3)
+send_ned_velocity(0, 0, 1, 3)
+send_ned_velocity(0, 0, 0, 3)
+
+for i in range(8):
+    condition_yaw(45, relative=True)
+    send_ned_velocity(0, 0, 0, 3)
+
+print("Setting RTL mode...")
+vehicle.mode = VehicleMode("RTL")
 
 
 #Close vehicle object before exiting script
